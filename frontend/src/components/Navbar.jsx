@@ -2,11 +2,12 @@ import { Fragment } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import {Link} from  "react-router-dom"
+import { Button, useToast } from '@chakra-ui/react'
 
 const navigation = [
   { name: 'Home', href: '/', current: true },
   { name: 'Login', href: '/login', current: false },
-  { name: 'Cart', href: '/cart', current: false },
+  { name: 'Cart', href: '/saved-recipe', current: false },
 ]
 
 function classNames(...classes) {
@@ -14,6 +15,19 @@ function classNames(...classes) {
 }
 
 export default function Navbar() {
+
+  const toast = useToast()
+
+  const handleLogout = () => {
+    localStorage.removeItem("weAsc");
+    toast({
+      title: "Logout Successfully",
+      description: "",
+      status: "success",
+      duration: 9000,
+      isClosable: true,
+    });
+  }
   return (
     <Disclosure as="nav" className="bg-gray-800">
       {({ open }) => (
@@ -78,11 +92,7 @@ export default function Navbar() {
                     <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <Button onClick={handleLogout}>Logout</Button>
                     </Menu.Button>
                   </div>
                   <Transition

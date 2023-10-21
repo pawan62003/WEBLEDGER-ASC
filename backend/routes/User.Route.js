@@ -21,15 +21,13 @@ UserRoute.post("/login", async (req, res) => {
   try {
     const user = await UserModel.findOne({ username });
     if (!user) {
-      return res.status(401).json({ message: "Please register your account" });
+      return res.json({ message: "Please register your account" });
     }
     if (user.password !== password) {
-      return res
-        .status(401)
-        .json({ message: "Please enter your correct password" });
+      return res.json({ message: "Please enter your correct password" });
     }
-    const token = jwt.sign({ userId: user._id }, "pawan_kumar", );
-    res.status(200).json({ token,massage:"Login successfully" });
+    const token = jwt.sign({ userId: user._id }, "pawan_kumar");
+    res.status(200).json({ token, message: "Login successfully" });
   } catch (error) {
     res.status(500).json({ message: "Internal server error" });
   }

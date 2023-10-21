@@ -1,15 +1,14 @@
 const express = require("express");
 const { connection } = require("./db");
 const { UserRoute } = require("./routes/User.Route");
-const axios = require("axios")
-const cors = require('cors')
+const axios = require("axios");
+const cors = require("cors");
+const { RecipeRoute } = require("./routes/Recipe.Route");
+const { auth } = require("./middleware/auth");
 
 const server = express();
 server.use(express.json());
-
-server.use("/user", UserRoute);
-
-server.use(cors())
+server.use(cors());
 
 server.get("/recipes/search", async (req, res) => {
   const { query } = req.query;
@@ -22,16 +21,18 @@ server.get("/recipes/search", async (req, res) => {
       apiUrl += `&query=${query}`;
     }
 
-    // Make a request to the Spoonacular API
     const response = await axios.get(apiUrl);
 
-    // Return the recipe search results
     res.json(response.data);
   } catch (error) {
     console.error("Error fetching data from Spoonacular API:", error);
     res.status(500).json({ error: "Failed to fetch recipes" });
   }
 });
+
+server.use("/user", UserRoute);
+server.use(auth);
+server.use("/recipe", RecipeRoute);
 
 server.listen(8080, async () => {
   try {
